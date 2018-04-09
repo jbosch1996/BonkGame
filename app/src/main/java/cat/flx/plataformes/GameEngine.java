@@ -132,6 +132,13 @@ public class GameEngine {
         else {
             if (down) input.pause();                    // DEAD-ZONE
         }
+        //RESTART THE GAME
+        if (act == MotionEvent.ACTION_DOWN && bonk.getState() == 3) {
+            bonk = new Bonk(this, 0,140);
+            scene.setRemainingLifes(3);
+            scene.setScore(0);
+            resume();
+        }
         return true;
     }
 
@@ -150,7 +157,7 @@ public class GameEngine {
         return true;
     }
 
-    private Paint paint, paintKeys,paintScore;
+    private Paint paint, paintKeys,paintScore,paintGameOverSquare,paintOverPopUp,paintGameOverText;
     private int screenWidth, screenHeight, scaledWidth;
     private float scale;
 
@@ -194,12 +201,20 @@ public class GameEngine {
         if (paint == null) {
             paint = new Paint();
             paint.setColor(Color.GRAY);
-            paint.setTextSize(10);
+            paint.setTextSize(6);
             paintKeys = new Paint();
             paintKeys.setColor(Color.argb(20, 0, 0, 0));
+            //PAINT SCORE
             paintScore = new Paint();
             paintScore.setColor(Color.BLACK);
             paintScore.setTextSize(5);
+            //PAINT GAME OVER
+            paintGameOverText = new Paint(paintScore);
+            paintGameOverText.setColor(Color.RED);
+            paintGameOverText.setTextSize(7);
+            paintGameOverSquare = new Paint(paintKeys);
+            paintGameOverSquare.setColor(Color.argb(90, 0, 0, 0));
+            paintOverPopUp = new Paint(paintGameOverText);
         }
 
         // Refresh scale factor if screen has changed sizes
@@ -237,6 +252,17 @@ public class GameEngine {
         canvas.drawText("»", 28, 92, paint);
         canvas.drawRect(81, 76, 99, 99, paintKeys);
         canvas.drawText("^", 88, 92, paint);
+
+
+        //GAME OVER
+        if (bonk.getState() == 3) {
+            stop();
+            String gameOverLbl = "GAME OVER";
+            String restartLbl = "Touch to restart!";
+            canvas.drawRect(10, 30, 90, 70, paintGameOverSquare);
+            canvas.drawText(gameOverLbl, 50 - paintOverPopUp.measureText(gameOverLbl) / 2, 50, paintOverPopUp);
+            canvas.drawText(restartLbl, 50 - paintOverPopUp.measureText(restartLbl) / 2, 60, paintOverPopUp);
+        }
         canvas.drawText("Score :" + scene.getScore(), 75,10,paintScore);
 
         //DRAW LIFES
