@@ -137,6 +137,9 @@ public class GameEngine {
             bonk = new Bonk(this, 0,140);
             scene.setRemainingLifes(3);
             scene.setScore(0);
+            //CREATE SCENE AGAIN
+            scene = new Scene(this);
+            scene.loadFromFile(R.raw.myscene);
             resume();
         }
         return true;
@@ -210,10 +213,11 @@ public class GameEngine {
             paintScore.setTextSize(5);
             //PAINT GAME OVER
             paintGameOverText = new Paint(paintScore);
-            paintGameOverText.setColor(Color.RED);
+            paintGameOverText.setColor(Color.YELLOW);
             paintGameOverText.setTextSize(7);
             paintGameOverSquare = new Paint(paintKeys);
-            paintGameOverSquare.setColor(Color.argb(90, 0, 0, 0));
+            paintGameOverSquare.setColor(Color.rgb(0, 0, 0));
+            paintGameOverSquare.setAlpha(98);
             paintOverPopUp = new Paint(paintGameOverText);
         }
 
@@ -259,7 +263,7 @@ public class GameEngine {
             stop();
             String gameOverLbl = "GAME OVER";
             String restartLbl = "Touch to restart!";
-            canvas.drawRect(10, 30, 90, 70, paintGameOverSquare);
+            canvas.drawRect(0, 0, 100, 100, paintGameOverSquare);
             canvas.drawText(gameOverLbl, 50 - paintOverPopUp.measureText(gameOverLbl) / 2, 50, paintOverPopUp);
             canvas.drawText(restartLbl, 50 - paintOverPopUp.measureText(restartLbl) / 2, 60, paintOverPopUp);
         }
